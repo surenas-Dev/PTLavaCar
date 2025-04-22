@@ -7,7 +7,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\PTLavaCar.ConsumoLogic\PTLavaCar.ConsumoLogic.csproj" />
+    <ProjectReference Include="..\PTLavaCar.ConsumoLogic\PTLavaCar.BussinesLogic.csproj" />
     <ProjectReference Include="..\PTLavaCar.Models\PTLavaCar.Models.csproj" />
   </ItemGroup>
 
