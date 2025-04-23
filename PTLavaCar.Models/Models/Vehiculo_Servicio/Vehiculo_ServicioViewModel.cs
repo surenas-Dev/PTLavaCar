@@ -8,7 +8,9 @@
         }
         public int ID_Vehiculo_Servicio { get; set; }
         public int ID_Servicio { get; set; }
+        public string Servicios { get; set; }
         public int ID_Vehiculo { get; set; }
+        public string Vehiculos { get; set; }
         public List<ServiciosModel> Servicio { get; set; }
         public List<VehiculoModel> Vehiculo { get; set; }
 

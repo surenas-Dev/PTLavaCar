@@ -59,13 +59,13 @@ namespace PTLavaCar.DataAccess
                 }
             }
         }
-        public async Task<Servicios> ObtenerId(string idServicios)
+        public async Task<Servicios> ObtenerId(int idServicios)
         {
             using (var ContextoBD = new LavaCarContext())
                 try
                 {
                     Servicios ObjetoBD = await ContextoBD
-                   .Servicios.OrderByDescending(x => x.Id == idServicios)
+                   .Servicios.OrderByDescending(x => x.ID_Servicio == idServicios)
                    .FirstOrDefaultAsync();
                     return ObjetoBD;
                 }
