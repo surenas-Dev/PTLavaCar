@@ -34,14 +34,17 @@
                        onclick="mostrarModal('@Url.Action("Modificar", "Vehiculo_Servicio", new { id = item.ID_Vehiculo_Servicio })')">
                         <i class="fa fa-edit"></i>
                     </a>
-                    <a class="btn btn-sm btn-danger" asp-action="Delete" asp-route-id="@item.ID_Vehiculo_Servicio">
+                    <button class="btn btn-sm btn-danger" onclick="eliminarAsignacion(@item.ID_Vehiculo_Servicio)">
                         <i class="fa fa-trash"></i>
-                    </a>
+                    </button>
                 </td>
             </tr>
         }
     </tbody>
 </table>
+<form id="formEliminarAsignacion" method="post" asp-action="DeleteConfirmed">
+    <input type="hidden" name="id" id="asignacionAEliminar" />
+</form>
 
 <div class="modal fade" id="modalMantenimiento" tabindex="-1" aria-labelledby="modalLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg">
@@ -60,6 +63,23 @@
         function mostrarModal(url) {
             $('#modalContenido').load(url, function () {
                 $('#modalMantenimiento').modal('show');
+            });
+        }
+        function eliminarAsignacion(id) {
+            Swal.fire({
+                title: '¿Estás seguro?',
+                text: "Se eliminará la asignación de servicio al vehículo.",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#d33',
+                cancelButtonColor: '#6c757d',
+                confirmButtonText: 'Sí, eliminar',
+                cancelButtonText: 'Cancelar'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    document.getElementById('asignacionAEliminar').value = id;
+                    document.getElementById('formEliminarAsignacion').submit();
+                }
             });
         }
     </script>

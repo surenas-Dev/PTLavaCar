@@ -30,14 +30,18 @@
                        onclick="mostrarModal('@Url.Action("Modificar", "Vehiculo", new { id = item.ID_Vehiculo })')">
                         <i class="fa fa-edit"></i>
                     </a>
-                    <a class="btn btn-sm btn-danger" asp-action="Delete" asp-route-id="@item.ID_Vehiculo">
+                    <button class="btn btn-sm btn-danger" onclick="eliminarVehiculo(@item.ID_Vehiculo)">
                         <i class="fa fa-trash"></i>
-                    </a>
+                    </button>
                 </td>
             </tr>
         }
     </tbody>
 </table>
+<form id="formEliminarVehiculo" method="post" asp-action="DeleteConfirmed">
+    <input type="hidden" name="id" id="vehiculoAEliminar" />
+</form>
+
 
 <div class="modal fade" id="modalMantenimiento" tabindex="-1" aria-labelledby="modalLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg">
@@ -57,6 +61,23 @@
         function mostrarModal(url) {
             $('#modalContenido').load(url, function () {
                 $('#modalMantenimiento').modal('show');
+            });
+        }
+        function eliminarVehiculo(id) {
+            Swal.fire({
+                title: '¿Estás seguro?',
+                text: "Esta acción no se puede deshacer",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#d33',
+                cancelButtonColor: '#6c757d',
+                confirmButtonText: 'Sí, eliminar',
+                cancelButtonText: 'Cancelar'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    document.getElementById('vehiculoAEliminar').value = id;
+                    document.getElementById('formEliminarVehiculo').submit();
+                }
             });
         }
     </script>

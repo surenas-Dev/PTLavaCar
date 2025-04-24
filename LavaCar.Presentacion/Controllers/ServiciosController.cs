@@ -64,7 +64,7 @@ namespace UI.PTLavaCar.Controllers
             return View(servicios);
         }
 
-        [HttpPost, ActionName("Delete")]
+        [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
