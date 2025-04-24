@@ -11,7 +11,7 @@ namespace PTLavaCar.BussinesLogic
         {
             _daVehiculo = daVehiculo;
         }
-
+       
         public async Task<VehiculoModel> Agregar(VehiculoModel model)
         {
             var entidad = await _daVehiculo.Agregar(model);

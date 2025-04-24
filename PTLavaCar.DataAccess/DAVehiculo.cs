@@ -12,6 +12,10 @@ namespace PTLavaCar.DataAccess
         {
             _context = context;
         }
+        public DAVehiculo()
+        {
+            _context = new LavaCarContext(); 
+        }
 
         public async Task<Vehiculo> Agregar(VehiculoModel model)
         {
@@ -30,6 +34,10 @@ namespace PTLavaCar.DataAccess
         }
 
         public async Task<IEnumerable<Vehiculo>> Listar()
+        {
+            return await _context.Vehiculo.ToListAsync();
+        }
+        public virtual async Task<IEnumerable<Vehiculo>> ListarTest()
         {
             return await _context.Vehiculo.ToListAsync();
         }

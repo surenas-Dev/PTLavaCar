@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
@@ -14,8 +14,13 @@
     <PackageReference Include="coverlet.collector" Version="6.0.0" />
     <PackageReference Include="Microsoft.Extensions.Configuration.UserSecrets" Version="6.0.1" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.13.0" />
+    <PackageReference Include="Moq" Version="4.20.72" />
     <PackageReference Include="MSTest.TestAdapter" Version="3.8.3" />
     <PackageReference Include="MSTest.TestFramework" Version="3.8.3" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\PTLavaCar.ConsumoLogic\PTLavaCar.BussinesLogic.csproj" />
   </ItemGroup>
 
   <ItemGroup>

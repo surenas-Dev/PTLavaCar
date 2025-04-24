@@ -13,8 +13,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PTLavaCar.DataAccess", "PTL
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PTLavaCar.Models", "PTLavaCar.Models\PTLavaCar.Models.csproj", "{620224B6-977A-44A2-B5A9-FB815DC1E3BD}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Test.PTLavaCar", "Tests.PTLavaCar\Test.PTLavaCar.csproj", "{7A14224E-9354-4705-B5DF-42464B7D1899}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -37,10 +35,6 @@ Global
 		{620224B6-977A-44A2-B5A9-FB815DC1E3BD}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{620224B6-977A-44A2-B5A9-FB815DC1E3BD}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{620224B6-977A-44A2-B5A9-FB815DC1E3BD}.Release|Any CPU.Build.0 = Release|Any CPU
-		{7A14224E-9354-4705-B5DF-42464B7D1899}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{7A14224E-9354-4705-B5DF-42464B7D1899}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{7A14224E-9354-4705-B5DF-42464B7D1899}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{7A14224E-9354-4705-B5DF-42464B7D1899}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
