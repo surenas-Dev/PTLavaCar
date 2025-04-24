@@ -1,95 +1,50 @@
-﻿using Microsoft.Extensions.Configuration;
-using PTLavaCar.DataAccess;
+﻿using PTLavaCar.DataAccess;
 using PTLavaCar.Models;
 
 namespace PTLavaCar.BussinesLogic
 {
     public class VehiculoLogic
     {
-        private DAVehiculo _DAVehiculo;
+        private readonly DAVehiculo _daVehiculo;
 
-        public VehiculoLogic(IConfiguration configuration)
+        public VehiculoLogic(DAVehiculo daVehiculo)
         {
-            _DAVehiculo = new DAVehiculo();
+            _daVehiculo = daVehiculo;
         }
+
         public async Task<VehiculoModel> Agregar(VehiculoModel model)
         {
-            try
-            {
-                var entidad = await _DAVehiculo.Agregar(model);
-                model = new VehiculoModel(entidad);
-                return model;
-            }
-            catch (Exception e)
-            {
-                throw e;
-            }
+            var entidad = await _daVehiculo.Agregar(model);
+            return new VehiculoModel(entidad);
         }
+
         public async Task<VehiculoModel> Actualizar(VehiculoModel model)
         {
-            try
-            {
-                var entidad = await _DAVehiculo.Actualizar(model);
-                model = new VehiculoModel(entidad);
-                return model;
-            }
-            catch (Exception e)
-            {
-                throw e;
-            }
+            var entidad = await _daVehiculo.Actualizar(model);
+            return new VehiculoModel(entidad);
         }
+
         public async Task<VehiculoModel> Eliminar(VehiculoModel model)
         {
-            try
-            {
-                VehiculoModel ObjetoModel = new VehiculoModel(await _DAVehiculo.Eliminar(model));
-                return ObjetoModel;
-            }
-            catch (Exception e)
-            {
-                throw e;
-            }
+            var entidad = await _daVehiculo.Eliminar(model);
+            return new VehiculoModel(entidad);
         }
+
         public async Task<IEnumerable<VehiculoModel>> Listar()
         {
-            try
-            {
-                var ListaObjetoBD = await _DAVehiculo.Listar();
-                IEnumerable<VehiculoModel> ListaRespuestaModel = ListaObjetoBD.Select(ObjetoBD => new VehiculoModel(ObjetoBD)).ToList();
-
-                return ListaRespuestaModel;
-            }
-            catch (Exception e)
-            {
-                return new List<VehiculoModel>().AsEnumerable();
-            }
+            var lista = await _daVehiculo.Listar();
+            return lista.Select(v => new VehiculoModel(v));
         }
 
         public async Task<IEnumerable<VehiculoViewModel>> ListarVM()
         {
-            try
-            {
-                var ListaObjetoBD = await _DAVehiculo.ListarVM();
-                return ListaObjetoBD;
-            }
-            catch (Exception e)
-            {
-                return new List<VehiculoViewModel>().AsEnumerable();
-            }
+            return await _daVehiculo.ListarVM();
         }
 
         public async Task<VehiculoModel> ObtenerId(int idVehiculo)
         {
-            try
-            {
-                VehiculoModel ObjetoModel = new VehiculoModel(await _DAVehiculo.ObtenerId(idVehiculo));
-
-                return ObjetoModel;
-            }
-            catch (Exception e)
-            {
-                throw e;
-            }
+            var entidad = await _daVehiculo.ObtenerId(idVehiculo);
+            return new VehiculoModel(entidad);
         }
     }
 }

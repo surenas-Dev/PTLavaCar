@@ -8,9 +8,9 @@ namespace UI.PTLavaCar.Controllers
     {
         private readonly VehiculoLogic _vehiculoLogic;
 
-        public VehiculoController(IConfiguration configuration)
+        public VehiculoController(VehiculoLogic vehiculoLogic)
         {
-            _vehiculoLogic = new VehiculoLogic(configuration);
+            _vehiculoLogic = vehiculoLogic;
         }
 
         public async Task<IActionResult> Index()
@@ -19,41 +19,41 @@ namespace UI.PTLavaCar.Controllers
             return View(lista);
         }
 
-        public IActionResult Create()
+        public IActionResult Agregar()
         {
-            return View();
+            return PartialView("_AgregarVehiculo", new VehiculoModel());
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(VehiculoModel model)
+        public async Task<IActionResult> Agregar(VehiculoModel model)
         {
             if (ModelState.IsValid)
             {
                 await _vehiculoLogic.Agregar(model);
                 return RedirectToAction(nameof(Index));
             }
-            return View(model);
+            return PartialView("_AgregarVehiculo", model);
         }
 
-        public async Task<IActionResult> Edit(int id)
+        public async Task<IActionResult> Modificar(int id)
         {
-            var vehiculo = await _vehiculoLogic.ObtenerId(id);
-            if (vehiculo == null) return NotFound();
+            var model = await _vehiculoLogic.ObtenerId(id);
+            if (model == null) return NotFound();
 
-            return View(vehiculo);
+            return PartialView("_ModificarVehiculo", model);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(VehiculoModel model)
+        public async Task<IActionResult> Modificar(VehiculoModel model)
         {
             if (ModelState.IsValid)
             {
                 await _vehiculoLogic.Actualizar(model);
                 return RedirectToAction(nameof(Index));
             }
-            return View(model);
+            return PartialView("_ModificarVehiculo", model);
         }
 
         public async Task<IActionResult> Delete(int id)

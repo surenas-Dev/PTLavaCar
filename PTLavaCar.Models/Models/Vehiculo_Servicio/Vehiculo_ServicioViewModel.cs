@@ -11,8 +11,10 @@
         public string Servicios { get; set; }
         public int ID_Vehiculo { get; set; }
         public string Vehiculos { get; set; }
+        public string Marca { get; set; }
+        public string Dueno { get; set; }
         public List<ServiciosModel> Servicio { get; set; }
         public List<VehiculoModel> Vehiculo { get; set; }
-
+        
     }
 }

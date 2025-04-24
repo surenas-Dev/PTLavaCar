@@ -1,5 +1,63 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
+﻿@model IEnumerable<PTLavaCar.Models.VehiculoViewModel>
 @{
+    ViewData["Title"] = "Vehículos";
+}
+
+<h2 class="mb-4"><i class="fa fa-car"></i> Lista de Vehículos</h2>
+
+<a href="javascript:void(0);" class="btn btn-primary mb-3" onclick="mostrarModal('@Url.Action("Agregar")')">
+    <i class="fa fa-plus"></i> Agregar Vehículo
+</a>
+
+<table class="table table-bordered table-striped">
+    <thead class="table-dark">
+        <tr>
+            <th>Placa</th>
+            <th>Dueño</th>
+            <th>Marca</th>
+            <th>Acciones</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@item.Placa</td>
+                <td>@item.Dueno</td>
+                <td>@item.Marca</td>
+                <td>
+                    <a class="btn btn-sm btn-info" href="javascript:void(0);"
+                       onclick="mostrarModal('@Url.Action("Modificar", "Vehiculo", new { id = item.ID_Vehiculo })')">
+                        <i class="fa fa-edit"></i>
+                    </a>
+                    <a class="btn btn-sm btn-danger" asp-action="Delete" asp-route-id="@item.ID_Vehiculo">
+                        <i class="fa fa-trash"></i>
+                    </a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<div class="modal fade" id="modalMantenimiento" tabindex="-1" aria-labelledby="modalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modalLabel">Formulario Vehículo</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+            </div>
+            <div class="modal-body" id="modalContenido">
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        function mostrarModal(url) {
+            $('#modalContenido').load(url, function () {
+                $('#modalMantenimiento').modal('show');
+            });
+        }
+    </script>
 }

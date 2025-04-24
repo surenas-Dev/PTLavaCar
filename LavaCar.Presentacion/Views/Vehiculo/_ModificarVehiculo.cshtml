@@ -1,5 +1,31 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
+﻿@model PTLavaCar.Models.VehiculoModel
 @{
+    Layout = null;
 }
+
+<form asp-action="Edit" method="post">
+    <input type="hidden" asp-for="ID_Vehiculo" />
+
+    <div class="mb-3">
+        <label class="form-label"><i class="fa fa-car"></i> Placa</label>
+        <input asp-for="Placa" class="form-control" placeholder="Ej: ABC123" />
+        <span asp-validation-for="Placa" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label"><i class="fa fa-user"></i> Nombre del Dueño</label>
+        <input asp-for="Dueno" class="form-control" placeholder="Nombre completo" />
+        <span asp-validation-for="Dueno" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label"><i class="fa fa-industry"></i> Marca</label>
+        <input asp-for="Marca" class="form-control" placeholder="Ej: Toyota, Honda..." />
+        <span asp-validation-for="Marca" class="text-danger"></span>
+    </div>
+
+    <div class="modal-footer">
+        <button type="submit" class="btn btn-primary"><i class="fa fa-save"></i> Guardar Cambios</button>
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"><i class="fa fa-times"></i> Cancelar</button>
+    </div>
+</form>

@@ -1,20 +1,16 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using PTLavaCar.BussinesLogic;
 using PTLavaCar.Models;
-using PTLavaCar.Models.Models;
 
 namespace UI.PTLavaCar.Controllers
 {
     public class ServiciosController : Controller
     {
         private readonly ServiciosLogic _serviciosLogic;
-        private readonly LavaCarContext _lavaCarContext;
 
-
-        public ServiciosController(IConfiguration configuration)
+        public ServiciosController(ServiciosLogic serviciosLogic)
         {
-            _serviciosLogic = new ServiciosLogic(configuration);
+            _serviciosLogic = serviciosLogic;
         }
 
         public async Task<IActionResult> Index()
@@ -23,14 +19,14 @@ namespace UI.PTLavaCar.Controllers
             return View(lista);
         }
 
-        public IActionResult Create()
+        public IActionResult Agregar()
         {
             return PartialView("_AgregarServicio", new ServiciosModel());
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(ServiciosModel model)
+        public async Task<IActionResult> Agregar(ServiciosModel model)
         {
             if (ModelState.IsValid)
             {
@@ -38,18 +34,19 @@ namespace UI.PTLavaCar.Controllers
                 return RedirectToAction(nameof(Index));
             }
             return PartialView("_AgregarServicio", model);
-
         }
 
-        public async Task<IActionResult> Edit(int id)
+        public async Task<IActionResult> Modificar(int id)
         {
             var model = await _serviciosLogic.ObtenerId(id);
+            if (model == null) return NotFound();
+
             return PartialView("_ModificarServicio", model);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(ServiciosModel model)
+        public async Task<IActionResult> Modificar(ServiciosModel model)
         {
             if (ModelState.IsValid)
             {
@@ -77,28 +74,11 @@ namespace UI.PTLavaCar.Controllers
 
             return RedirectToAction(nameof(Index));
         }
+
         public async Task<IActionResult> Reporte(int id)
         {
-            var servicio = await _lavaCarContext.Servicios
-                .Include(s => s.Vehiculo_Servicio)
-                .ThenInclude(vs => vs.ID_VehiculoNavigation)
-                .FirstOrDefaultAsync(s => s.ID_Servicio == id);
-
-            if (servicio == null) return NotFound();
-
-            var model = new ServiciosViewModel
-            {
-                ID_Servicio = servicio.ID_Servicio,
-                Descripcion = servicio.Descripcion,
-                Monto = (int)servicio.Monto, 
-                VehiculosAsociados = servicio.Vehiculo_Servicio.Select(vs => new VehiculoViewModel
-                {
-                    ID_Vehiculo = vs.ID_VehiculoNavigation.ID_Vehiculo,
-                    Placa = vs.ID_VehiculoNavigation.Placa,
-                    Dueno = vs.ID_VehiculoNavigation.Dueno,
-                    Marca = vs.ID_VehiculoNavigation.Marca
-                }).ToList()
-            };
+            var model = await _serviciosLogic.ObtenerReporte(id);
+            if (model == null) return NotFound();
 
             return View(model);
         }

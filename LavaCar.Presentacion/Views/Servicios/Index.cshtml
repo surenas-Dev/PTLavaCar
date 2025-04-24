@@ -1,4 +1,4 @@
-﻿@model IEnumerable<PTLavaCar.Models.ViewModels.ServiciosViewModel>
+﻿@model IEnumerable<PTLavaCar.Models.ServiciosViewModel>
 @{
     ViewData["Title"] = "Servicios";
 }
@@ -29,7 +29,10 @@
                         <i class="fa fa-edit"></i>
                     </a>
                     <a class="btn btn-sm btn-danger" asp-action="Delete" asp-route-id="@item.ID_Servicio"><i class="fa fa-trash"></i></a>
-                    <a class="btn btn-sm btn-secondary" asp-action="Reporte" asp-route-id="@item.ID_Servicio"><i class="fa fa-list"></i> Reporte</a>
+                    <a class="btn btn-sm btn-secondary" href="javascript:void(0);"
+                       onclick="mostrarModal('@Url.Action("Reporte", "Servicios", new { id = item.ID_Servicio })')">
+                        <i class="fa fa-list"></i> Reporte
+                    </a>
                 </td>
             </tr>
         }

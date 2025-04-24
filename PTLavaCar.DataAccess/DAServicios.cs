@@ -1,116 +1,73 @@
-﻿using PTLavaCar.Models.Models;
+﻿using Microsoft.EntityFrameworkCore;
 using PTLavaCar.Models;
-using Microsoft.EntityFrameworkCore;
+using PTLavaCar.Models.Models;
+
 namespace PTLavaCar.DataAccess
 {
     public class DAServicios
     {
-        private LavaCarContext _context;
+        private readonly LavaCarContext _context;
 
-        public DAServicios()
+        public DAServicios(LavaCarContext context)
         {
-            _context = new LavaCarContext();
+            _context = context;
         }
+
         public async Task<Servicios> Agregar(ServiciosModel model)
         {
-            using (var ContextoBD = new LavaCarContext())
-                try
-                {
-                    var entry = ContextoBD.Add(model.ConvertObjetoBD());
-                    await ContextoBD.SaveChangesAsync();
-
-                    return model.ConvertObjetoBD();
-                }
-                catch (Exception e)
-                {
-                    throw e;
-                }
+            var entidad = model.ConvertObjetoBD();
+            _context.Add(entidad);
+            await _context.SaveChangesAsync();
+            return entidad;
         }
+
         public async Task<Servicios> Actualizar(ServiciosModel model)
         {
-            using (var ContextoBD = new LavaCarContext())
-                try
-                {
-                    var entry = ContextoBD.Entry(model.ConvertObjetoBD());
-                    entry.State = EntityState.Modified;
-                    await ContextoBD.SaveChangesAsync();
-
-                    return model.ConvertObjetoBD();
-                }
-                catch (Exception e)
-                {
-                    throw e;
-                }
+            var entidad = model.ConvertObjetoBD();
+            _context.Entry(entidad).State = EntityState.Modified;
+            await _context.SaveChangesAsync();
+            return entidad;
         }
 
         public async Task<IEnumerable<Servicios>> Listar()
         {
-            using (var ContextoBD = new LavaCarContext())
-            {
-                try
-                {
-                    IEnumerable<Servicios> Lista = await ContextoBD.Servicios.ToListAsync();
-
-                    return Lista;
-                }
-                catch (Exception e)
-                {
-                    return null;
-                }
-            }
+            return await _context.Servicios.ToListAsync();
         }
+
         public async Task<Servicios> ObtenerId(int idServicios)
         {
-            using (var ContextoBD = new LavaCarContext())
-                try
-                {
-                    Servicios ObjetoBD = await ContextoBD
-                   .Servicios.OrderByDescending(x => x.ID_Servicio == idServicios)
-                   .FirstOrDefaultAsync();
-                    return ObjetoBD;
-                }
-                catch (Exception e)
-                {
-                    throw e;
-                }
+            return await _context.Servicios
+                .FirstOrDefaultAsync(x => x.ID_Servicio == idServicios);
         }
+
         public async Task<IEnumerable<ServiciosViewModel>> ListarVM()
         {
-            try
-            {
-                using (var ContextoBD = new LavaCarContext())
+            return await _context.Servicios
+                .Select(s => new ServiciosViewModel
                 {
-                    IEnumerable<ServiciosViewModel> ListaBD = ContextoBD.Servicios
-                                            .Select(s => new ServiciosViewModel()
-                                            {
-                                                ID_Servicio = s.ID_Servicio,
-                                                Descripcion = s.Descripcion,
-                                                Monto = s.Monto,
-                                            }).ToList();
-                    return ListaBD;
-                }
-            }
-            catch (Exception e)
-            {
-                throw e;
-            }
+                    ID_Servicio = s.ID_Servicio,
+                    Descripcion = s.Descripcion,
+                    Monto = s.Monto
+                }).ToListAsync();
         }
-        public async Task<Servicios> Eliminar(ServiciosModel Model)
-        {
-            using (var ContextoBD = new LavaCarContext())
-                try
-                {
-                    var AntiguoReg = ContextoBD.Servicios.AsNoTracking().FirstOrDefault(u => u.ID_Servicio == Model.ID_Servicio);
-                    var entry = ContextoBD.Entry(AntiguoReg);
-                    ContextoBD.Servicios.Remove(AntiguoReg);
-                    ContextoBD.SaveChanges();
 
-                    return AntiguoReg;
-                }
-                catch (Exception e)
-                {
-                    throw e;
-                }
+        public async Task<Servicios> Eliminar(ServiciosModel model)
+        {
+            var entidad = await _context.Servicios.FindAsync(model.ID_Servicio);
+            if (entidad != null)
+            {
+                _context.Servicios.Remove(entidad);
+                await _context.SaveChangesAsync();
+            }
+            return entidad;
         }
+        public async Task<Servicios> ObtenerIdConVehiculos(int id)
+        {
+            return await _context.Servicios
+                .Include(s => s.Vehiculo_Servicio)
+                .ThenInclude(vs => vs.ID_VehiculoNavigation)
+                .FirstOrDefaultAsync(s => s.ID_Servicio == id);
+        }
+
     }
 }
