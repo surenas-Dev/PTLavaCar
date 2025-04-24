@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using PTLavaCar.BussinesLogic;
+using PTLavaCar.Helpers;
 using PTLavaCar.Models;
 
 namespace UI.PTLavaCar.Controllers
@@ -28,24 +29,13 @@ namespace UI.PTLavaCar.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Agregar(VehiculoModel model)
         {
-            if (!ModelState.IsValid)
-            {
-                var errors = ModelState.ToDictionary(
-                    kvp => kvp.Key,
-                    kvp => kvp.Value.Errors.Select(e => e.ErrorMessage).ToArray()
-                );
-                return Json(new { success = false, errors });
-            }
-
-            try
-            {
-                await _vehiculoLogic.Agregar(model);
-                return Json(new { success = true, message = "¡Vehículo guardado con éxito!" });
-            }
-            catch
-            {
-                return Json(new { success = false, message = "Ocurrió un error al guardar el vehículo." });
-            }
+            return await ControllerHelper.EjecutarFormularioAsync(
+                this,
+                model,
+                _vehiculoLogic.Agregar,
+                "¡Vehículo guardado con éxito!",
+                "Ocurrió un error al guardar el vehículo."
+            );
         }
 
         public async Task<IActionResult> Modificar(int id)
@@ -60,24 +50,13 @@ namespace UI.PTLavaCar.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Modificar(VehiculoModel model)
         {
-            if (!ModelState.IsValid)
-            {
-                var errors = ModelState.ToDictionary(
-                    kvp => kvp.Key,
-                    kvp => kvp.Value.Errors.Select(e => e.ErrorMessage).ToArray()
-                );
-                return Json(new { success = false, errors });
-            }
-
-            try
-            {
-                await _vehiculoLogic.Actualizar(model);
-                return Json(new { success = true, message = "¡Vehículo modificado correctamente!" });
-            }
-            catch
-            {
-                return Json(new { success = false, message = "Ocurrió un error al modificar el vehículo." });
-            }
+            return await ControllerHelper.EjecutarFormularioAsync(
+                this,
+                model,
+                _vehiculoLogic.Actualizar,
+                "¡Vehículo modificado correctamente!",
+                "Ocurrió un error al modificar el vehículo."
+            );
         }
 
         public async Task<IActionResult> Delete(int id)

@@ -34,9 +34,17 @@
                        onclick="mostrarModal('@Url.Action("Modificar", "Vehiculo_Servicio", new { id = item.ID_Vehiculo_Servicio })')">
                         <i class="fa fa-edit"></i>
                     </a>
-                    <button class="btn btn-sm btn-danger" onclick="eliminarAsignacion(@item.ID_Vehiculo_Servicio)">
+                    <button class="btn btn-sm btn-danger"
+                            onclick="eliminarEntidad(@item.ID_Vehiculo_Servicio, 'formEliminarAsignacion', 'asignacionAEliminar', {
+                                 titulo: '¿Eliminar asignación?',
+                                 texto: 'Se eliminará la relación entre el vehículo y el servicio.',
+                                 mensajeExito: 'Asignación eliminada correctamente',
+                                 mensajeError: 'No se pudo eliminar la asignación'
+                             })">
                         <i class="fa fa-trash"></i>
                     </button>
+
+
                 </td>
             </tr>
         }
@@ -57,88 +65,3 @@
         </div>
     </div>
 </div>
-
-@section Scripts {
-    <script>
-        function mostrarModal(url) {
-            $('#modalContenido').load(url, function() {
-                $('#modalMantenimiento').modal('show');
-
-                $('form', '#modalContenido').on('submit', function(e) {
-                    e.preventDefault();
-                    const form = $(this);
-
-                    $.ajax({
-                        url: form.attr('action'),
-                        method: form.attr('method'),
-                        data: form.serialize(),
-                        success: function(response) {
-                            if (response.success) {
-                                $('#modalMantenimiento').modal('hide');
-                                Swal.fire({
-                                    icon: 'success',
-                                    title: 'Éxito',
-                                    text: response.message,
-                                    timer: 3000,
-                                    showConfirmButton: false
-                                    }).then(() => {
-                                            location.reload();
-                                        });
-                                    } else {
-                                        $('.text-danger', form).html('');
-
-                                        if (response.errors) {
-                                            $.each(response.errors, function(key, messages) {
-                                                const input = $('[name="' + key + '"]', form);
-                                                const errorSpan = input.next('.text-danger');
-
-                                                if (errorSpan.length) {
-                                                    errorSpan.html(messages.join('<br>'));
-                                                } else {
-                                                    input.after('<span class="text-danger">' + messages.join('<br>') + '</span>');
-                                                }
-                                            });
-                                        } else if (response.message) {
-                                            Swal.fire({
-                                                icon: 'error',
-                                                title: 'Error',
-                                                text: response.message,
-                                                timer: 3500,
-                                                showConfirmButton: false
-                                            });
-                                        }
-                                    }
-                                },
-                                error: function() {
-                                    Swal.fire({
-                                        icon: 'error',
-                                        title: 'Error',
-                                        text: 'Error al procesar la solicitud',
-                                        timer: 3500,
-                                        showConfirmButton: false
-                                    });
-                                }
-                            });
-                        });
-                    });
-                }
-
-                function eliminarAsignacion(id) {
-                    Swal.fire({
-                        title: '¿Estás seguro?',
-                        text: "Se eliminará la asignación de servicio al vehículo.",
-                        icon: 'warning',
-                        showCancelButton: true,
-                        confirmButtonColor: '#d33',
-                        cancelButtonColor: '#6c757d',
-                        confirmButtonText: 'Sí, eliminar',
-                        cancelButtonText: 'Cancelar'
-                    }).then((result) => {
-                        if (result.isConfirmed) {
-                            document.getElementById('asignacionAEliminar').value = id;
-                            document.getElementById('formEliminarAsignacion').submit();
-                        }
-                    });
-                }
-    </script>
-}

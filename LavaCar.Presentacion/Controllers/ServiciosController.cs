@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using PTLavaCar.BussinesLogic;
+using PTLavaCar.Helpers;
 using PTLavaCar.Models;
 
 namespace UI.PTLavaCar.Controllers
@@ -28,24 +29,13 @@ namespace UI.PTLavaCar.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Agregar(ServiciosModel model)
         {
-            if (!ModelState.IsValid)
-            {
-                var errors = ModelState.ToDictionary(
-                    kvp => kvp.Key,
-                    kvp => kvp.Value.Errors.Select(e => e.ErrorMessage).ToArray()
-                );
-                return Json(new { success = false, errors });
-            }
-
-            try
-            {
-                await _serviciosLogic.Agregar(model);
-                return Json(new { success = true, message = "¡Registro guardado con éxito!" });
-            }
-            catch
-            {
-                return Json(new { success = false, message = "Ocurrió un error al guardar el registro." });
-            }
+            return await ControllerHelper.EjecutarFormularioAsync(
+                this,
+                model,
+                _serviciosLogic.Agregar,
+                "¡Registro guardado con éxito!",
+                "Ocurrió un error al guardar el registro."
+            );
         }
 
         public async Task<IActionResult> Modificar(int id)
@@ -56,28 +46,18 @@ namespace UI.PTLavaCar.Controllers
             return PartialView("_ModificarServicio", model);
         }
 
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Modificar(ServiciosModel model)
         {
-            if (!ModelState.IsValid)
-            {
-                var errors = ModelState.ToDictionary(
-                    kvp => kvp.Key,
-                    kvp => kvp.Value.Errors.Select(e => e.ErrorMessage).ToArray()
-                );
-                return Json(new { success = false, errors });
-            }
-
-            try
-            {
-                await _serviciosLogic.Actualizar(model);
-                return Json(new { success = true, message = "¡Registro modificado correctamente!" });
-            }
-            catch
-            {
-                return Json(new { success = false, message = "Ocurrió un error al modificar el registro." });
-            }
+            return await ControllerHelper.EjecutarFormularioAsync(
+                this,
+                model,
+                _serviciosLogic.Actualizar,
+                "¡Registro modificado correctamente!",
+                "Ocurrió un error al modificar el registro."
+            );
         }
         public async Task<IActionResult> Delete(int id)
         {

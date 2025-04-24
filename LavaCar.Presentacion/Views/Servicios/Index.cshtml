@@ -28,9 +28,16 @@
                        onclick="mostrarModal('@Url.Action("Modificar", "Servicios", new { id = item.ID_Servicio })')">
                         <i class="fa fa-edit"></i>
                     </a>
-                    <button class="btn btn-sm btn-danger" onclick="eliminarServicio(@item.ID_Servicio)">
+                    <button class="btn btn-sm btn-danger"
+                            onclick="eliminarEntidad(@item.ID_Servicio, 'formEliminarServicio', 'servicioAEliminar', {
+                                titulo: '¿Eliminar servicio?',
+                                texto: 'Se eliminará el servicio seleccionado.',
+                                mensajeExito: 'Servicio eliminado correctamente',
+                                mensajeError: 'No se pudo eliminar el servicio'
+                            })">
                         <i class="fa fa-trash"></i>
                     </button>
+
                     <a class="btn btn-sm btn-secondary" href="javascript:void(0);"
                        onclick="mostrarModal('@Url.Action("Reporte", "Servicios", new { id = item.ID_Servicio })')">
                         <i class="fa fa-list"></i> Reporte
@@ -56,86 +63,3 @@
         </div>
     </div>
 </div>
-
-@section Scripts {
-    <script>
-        function mostrarModal(url) {
-            $('#modalContenido').load(url, function() {
-                $('#modalMantenimiento').modal('show');
-                $('form', '#modalContenido').on('submit', function(e) {
-                    e.preventDefault();
-                    const form = $(this);
-
-                    $.ajax({
-                        url: form.attr('action'),
-                        method: form.attr('method'),
-                        data: form.serialize(),
-                        success: function(response) {
-                            if (response.success) {
-                                $('#modalMantenimiento').modal('hide');
-                                Swal.fire({
-                                    icon: 'success',
-                                    title: 'Éxito',
-                                    text: response.message,
-                                    timer: 3000,
-                                    showConfirmButton: false
-                                    }).then(() => {
-                                            location.reload();
-                                            });
-                                            } else {
-                                                $('.text-danger', form).html('');
-
-                                                if (response.errors) {
-                                                    $.each(response.errors, function(key, messages) {
-                                                        const input = $('[name="' + key + '"]', form);
-                                                        const errorSpan = input.next('.text-danger');
-
-                                                        if (errorSpan.length) {
-                                                            errorSpan.html(messages.join('<br>'));
-                                                        } else {
-                                                            input.after('<span class="text-danger">' + messages.join('<br>') + '</span>');
-                                                        }
-                                                    });
-                                                } else if (response.message) {
-                                                    Swal.fire({
-                                                        icon: 'error',
-                                                        title: 'Error',
-                                                        text: response.message,
-                                                        timer: 3500,
-                                                        showConfirmButton: false
-                                                    });
-                                                }
-                                            }
-                                        },
-                                        error: function() {
-                                            Swal.fire({
-                                                icon: 'error',
-                                                title: 'Error',
-                                                text: 'Error al procesar la solicitud',
-                                                timer: 3500,
-                                                showConfirmButton: false
-                                            });
-                                        }
-                                    });
-                                });
-                            });
-                        }
-                function eliminarServicio(id) {
-                    Swal.fire({
-                        title: '¿Estás seguro?',
-                        text: "Esta acción no se puede deshacer",
-                        icon: 'warning',
-                        showCancelButton: true,
-                        confirmButtonColor: '#d33',
-                        cancelButtonColor: '#6c757d',
-                        confirmButtonText: 'Sí, eliminar',
-                        cancelButtonText: 'Cancelar'
-                    }).then((result) => {
-                        if (result.isConfirmed) {
-                            document.getElementById('servicioAEliminar').value = id;
-                            document.getElementById('formEliminarServicio').submit();
-                        }
-                    });
-                }
-    </script>
-}
