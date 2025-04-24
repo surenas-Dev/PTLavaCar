@@ -1,29 +1,32 @@
 ﻿@model PTLavaCar.Models.VehiculoModel
-@{
-    Layout = null;
-}
 
 <form asp-action="Agregar" method="post">
     <div class="mb-3">
-        <label class="form-label"><i class="fa fa-car"></i> Placa</label>
-        <input asp-for="Placa" class="form-control" placeholder="Ej: ABC123" />
+        <label class="form-label">Placa</label>
+        <input asp-for="Placa" class="form-control" />
         <span asp-validation-for="Placa" class="text-danger"></span>
     </div>
 
     <div class="mb-3">
-        <label class="form-label"><i class="fa fa-user"></i> Nombre del Dueño</label>
-        <input asp-for="Dueno" class="form-control" placeholder="Nombre completo" />
+        <label class="form-label">Dueño</label>
+        <input asp-for="Dueno" class="form-control" />
         <span asp-validation-for="Dueno" class="text-danger"></span>
     </div>
 
     <div class="mb-3">
-        <label class="form-label"><i class="fa fa-industry"></i> Marca</label>
-        <input asp-for="Marca" class="form-control" placeholder="Ej: Toyota, Honda..." />
+        <label class="form-label">Marca</label>
+        <input asp-for="Marca" class="form-control" />
         <span asp-validation-for="Marca" class="text-danger"></span>
     </div>
 
     <div class="modal-footer">
         <button type="submit" class="btn btn-success"><i class="fa fa-check"></i> Guardar</button>
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"><i class="fa fa-times"></i> Cancelar</button>
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
     </div>
 </form>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

@@ -28,12 +28,24 @@ namespace UI.PTLavaCar.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Agregar(VehiculoModel model)
         {
-            if (ModelState.IsValid)
+            if (!ModelState.IsValid)
+            {
+                var errors = ModelState.ToDictionary(
+                    kvp => kvp.Key,
+                    kvp => kvp.Value.Errors.Select(e => e.ErrorMessage).ToArray()
+                );
+                return Json(new { success = false, errors });
+            }
+
+            try
             {
                 await _vehiculoLogic.Agregar(model);
-                return RedirectToAction(nameof(Index));
+                return Json(new { success = true, message = "¡Vehículo guardado con éxito!" });
             }
-            return PartialView("_AgregarVehiculo", model);
+            catch
+            {
+                return Json(new { success = false, message = "Ocurrió un error al guardar el vehículo." });
+            }
         }
 
         public async Task<IActionResult> Modificar(int id)
@@ -48,12 +60,24 @@ namespace UI.PTLavaCar.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Modificar(VehiculoModel model)
         {
-            if (ModelState.IsValid)
+            if (!ModelState.IsValid)
+            {
+                var errors = ModelState.ToDictionary(
+                    kvp => kvp.Key,
+                    kvp => kvp.Value.Errors.Select(e => e.ErrorMessage).ToArray()
+                );
+                return Json(new { success = false, errors });
+            }
+
+            try
             {
                 await _vehiculoLogic.Actualizar(model);
-                return RedirectToAction(nameof(Index));
+                return Json(new { success = true, message = "¡Vehículo modificado correctamente!" });
             }
-            return PartialView("_ModificarVehiculo", model);
+            catch
+            {
+                return Json(new { success = false, message = "Ocurrió un error al modificar el vehículo." });
+            }
         }
 
         public async Task<IActionResult> Delete(int id)

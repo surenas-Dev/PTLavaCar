@@ -59,26 +59,83 @@
 @section Scripts {
     <script>
         function mostrarModal(url) {
-            $('#modalContenido').load(url, function () {
+            $('#modalContenido').load(url, function() {
                 $('#modalMantenimiento').modal('show');
-            });
-        }
-        function eliminarVehiculo(id) {
-            Swal.fire({
-                title: '¿Estás seguro?',
-                text: "Esta acción no se puede deshacer",
-                icon: 'warning',
-                showCancelButton: true,
-                confirmButtonColor: '#d33',
-                cancelButtonColor: '#6c757d',
-                confirmButtonText: 'Sí, eliminar',
-                cancelButtonText: 'Cancelar'
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    document.getElementById('vehiculoAEliminar').value = id;
-                    document.getElementById('formEliminarVehiculo').submit();
+                $('form', '#modalContenido').on('submit', function(e) {
+                    e.preventDefault();
+                    const form = $(this);
+
+                    $.ajax({
+                        url: form.attr('action'),
+                        method: form.attr('method'),
+                        data: form.serialize(),
+                        success: function(response) {
+                            if (response.success) {
+                                $('#modalMantenimiento').modal('hide');
+                                Swal.fire({
+                                    icon: 'success',
+                                    title: 'Éxito',
+                                    text: response.message,
+                                    timer: 3000,
+                                    showConfirmButton: false
+                                    }).then(() => {
+                                            location.reload();
+                                        });
+                                    } else {
+                                        $('.text-danger', form).html('');
+
+                                        if (response.errors) {
+                                            $.each(response.errors, function(key, messages) {
+                                                const input = $('[name="' + key + '"]', form);
+                                                const errorSpan = input.next('.text-danger');
+
+                                                if (errorSpan.length) {
+                                                    errorSpan.html(messages.join('<br>'));
+                                                } else {
+                                                    input.after('<span class="text-danger">' + messages.join('<br>') + '</span>');
+                                                }
+                                            });
+                                        } else if (response.message) {
+                                            Swal.fire({
+                                                icon: 'error',
+                                                title: 'Error',
+                                                text: response.message,
+                                                timer: 3500,
+                                                showConfirmButton: false
+                                            });
+                                        }
+                                    }
+                                },
+                                error: function() {
+                                    Swal.fire({
+                                        icon: 'error',
+                                        title: 'Error',
+                                        text: 'Error al procesar la solicitud',
+                                        timer: 3500,
+                                        showConfirmButton: false
+                                    });
+                                }
+                            });
+                        });
+                    });
                 }
-            });
-        }
+
+                function eliminarVehiculo(id) {
+                    Swal.fire({
+                        title: '¿Estás seguro?',
+                        text: "Esta acción no se puede deshacer",
+                        icon: 'warning',
+                        showCancelButton: true,
+                        confirmButtonColor: '#d33',
+                        cancelButtonColor: '#6c757d',
+                        confirmButtonText: 'Sí, eliminar',
+                        cancelButtonText: 'Cancelar'
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            document.getElementById('vehiculoAEliminar').value = id;
+                            document.getElementById('formEliminarVehiculo').submit();
+                        }
+                    });
+                }
     </script>
 }

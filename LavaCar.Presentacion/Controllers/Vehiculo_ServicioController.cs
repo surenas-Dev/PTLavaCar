@@ -37,14 +37,25 @@ namespace UI.PTLavaCar.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Agregar(Vehiculo_ServicioModel model)
         {
-            if (ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
-                await _vehiculoServicio.Agregar(model);
-                return RedirectToAction(nameof(Index));
+                await CargarCombos();
+                var errors = ModelState.ToDictionary(
+                    kvp => kvp.Key,
+                    kvp => kvp.Value.Errors.Select(e => e.ErrorMessage).ToArray()
+                );
+                return Json(new { success = false, errors });
             }
 
-            await CargarCombos();
-            return PartialView("_AgregarAsignacion", model);
+            try
+            {
+                await _vehiculoServicio.Agregar(model);
+                return Json(new { success = true, message = "¡Asignación guardada con éxito!" });
+            }
+            catch
+            {
+                return Json(new { success = false, message = "Ocurrió un error al guardar la asignación." });
+            }
         }
 
         public async Task<IActionResult> Modificar(int id)
@@ -56,18 +67,30 @@ namespace UI.PTLavaCar.Controllers
             return PartialView("_ModificarAsignacion", model);
         }
 
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Modificar(Vehiculo_ServicioModel model)
         {
-            if (ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
-                await _vehiculoServicio.Actualizar(model);
-                return RedirectToAction(nameof(Index));
+                await CargarCombos(model.ID_Vehiculo, model.ID_Servicio);
+                var errors = ModelState.ToDictionary(
+                    kvp => kvp.Key,
+                    kvp => kvp.Value.Errors.Select(e => e.ErrorMessage).ToArray()
+                );
+                return Json(new { success = false, errors });
             }
 
-            await CargarCombos(model.ID_Vehiculo, model.ID_Servicio);
-            return PartialView("_ModificarAsignacion", model);
+            try
+            {
+                await _vehiculoServicio.Actualizar(model);
+                return Json(new { success = true, message = "¡Asignación modificada correctamente!" });
+            }
+            catch
+            {
+                return Json(new { success = false, message = "Ocurrió un error al modificar la asignación." });
+            }
         }
 
         public async Task<IActionResult> Delete(int id)

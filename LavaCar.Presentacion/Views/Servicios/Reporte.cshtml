@@ -1,44 +1,53 @@
 ﻿@model PTLavaCar.Models.ServiciosViewModel
-
 @{
-    ViewData["Title"] = "Reporte de Servicio";
+    Layout = null;
 }
 
-<h2 class="mb-4">
-    <i class="fa fa-list"></i> Vehículos Asignados al Servicio: <strong>@Model.Descripcion</strong>
-</h2>
+<div class="modal-header">
+    <h5 class="modal-title">
+        <i class="fa fa-list"></i> Reporte: @Model.Descripcion
+        <p><strong>Monto:</strong> ₡@Model.Monto</p>
+    </h5>
 
-<p><strong>Monto del servicio:</strong> ₡@Model.Monto</p>
+</div>
 
-@if (Model.VehiculosAsociados != null && Model.VehiculosAsociados.Any())
-{
-    <table class="table table-bordered table-striped">
-        <thead class="table-dark">
-            <tr>
-                <th>Placa</th>
-                <th>Dueño</th>
-                <th>Marca</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var vehiculo in Model.VehiculosAsociados)
-            {
-                <tr>
-                    <td>@vehiculo.Placa</td>
-                    <td>@vehiculo.Dueno</td>
-                    <td>@vehiculo.Marca</td>
-                </tr>
-            }
-        </tbody>
-    </table>
-}
-else
-{
-    <div class="alert alert-info">
-        No hay vehículos asociados a este servicio.
-    </div>
-}
+<div class="modal-body">
 
-<a href="@Url.Action("Index", "Servicios")" class="btn btn-secondary mt-3">
-    <i class="fa fa-arrow-left"></i> Volver a la lista de servicios
-</a>
+    @if (Model.VehiculosAsociados != null && Model.VehiculosAsociados.Any())
+    {
+        <div class="table-responsive">
+            <h5>Vehículos Asociados</h5>
+            <table class="table table-bordered table-striped">
+                <thead class="table-dark">
+                    <tr>
+                        <th>Placa</th>
+                        <th>Dueño</th>
+                        <th>Marca</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var vehiculo in Model.VehiculosAsociados)
+                    {
+                        <tr>
+                            <td>@vehiculo.Placa</td>
+                            <td>@vehiculo.Dueno</td>
+                            <td>@vehiculo.Marca</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    }
+    else
+    {
+        <div class="alert alert-info">
+            No hay vehículos asociados a este servicio.
+        </div>
+    }
+</div>
+
+<div class="modal-footer">
+    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+        <i class="fa fa-times"></i> Cerrar
+    </button>
+</div>

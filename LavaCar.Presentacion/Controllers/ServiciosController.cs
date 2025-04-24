@@ -28,12 +28,24 @@ namespace UI.PTLavaCar.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Agregar(ServiciosModel model)
         {
-            if (ModelState.IsValid)
+            if (!ModelState.IsValid)
+            {
+                var errors = ModelState.ToDictionary(
+                    kvp => kvp.Key,
+                    kvp => kvp.Value.Errors.Select(e => e.ErrorMessage).ToArray()
+                );
+                return Json(new { success = false, errors });
+            }
+
+            try
             {
                 await _serviciosLogic.Agregar(model);
-                return RedirectToAction(nameof(Index));
+                return Json(new { success = true, message = "¡Registro guardado con éxito!" });
             }
-            return PartialView("_AgregarServicio", model);
+            catch
+            {
+                return Json(new { success = false, message = "Ocurrió un error al guardar el registro." });
+            }
         }
 
         public async Task<IActionResult> Modificar(int id)
@@ -48,14 +60,25 @@ namespace UI.PTLavaCar.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Modificar(ServiciosModel model)
         {
-            if (ModelState.IsValid)
+            if (!ModelState.IsValid)
+            {
+                var errors = ModelState.ToDictionary(
+                    kvp => kvp.Key,
+                    kvp => kvp.Value.Errors.Select(e => e.ErrorMessage).ToArray()
+                );
+                return Json(new { success = false, errors });
+            }
+
+            try
             {
                 await _serviciosLogic.Actualizar(model);
-                return RedirectToAction(nameof(Index));
+                return Json(new { success = true, message = "¡Registro modificado correctamente!" });
             }
-            return PartialView("_ModificarServicio", model);
+            catch
+            {
+                return Json(new { success = false, message = "Ocurrió un error al modificar el registro." });
+            }
         }
-
         public async Task<IActionResult> Delete(int id)
         {
             var servicios = await _serviciosLogic.ObtenerId(id);
@@ -80,7 +103,7 @@ namespace UI.PTLavaCar.Controllers
             var model = await _serviciosLogic.ObtenerReporte(id);
             if (model == null) return NotFound();
 
-            return View(model);
+            return PartialView("Reporte", model);
         }
     }
 }

@@ -21,3 +21,11 @@
         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"><i class="fa fa-times"></i> Cancelar</button>
     </div>
 </form>
+
+<script>
+    if (!$.validator) {
+        $.getScript("/lib/jquery-validation/dist/jquery.validate.min.js", function () {
+            $.getScript("/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js");
+        });
+    }
+</script>

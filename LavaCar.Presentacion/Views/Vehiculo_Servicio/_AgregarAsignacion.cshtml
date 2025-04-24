@@ -5,7 +5,7 @@
     var servicios = ViewBag.Servicios as List<SelectListItem>;
 }
 
-<form asp-action="Agregar" method="post">
+<form asp-action="Agregar" method="post" id="asignacionForm">
     <div class="mb-3">
         <label class="form-label"><i class="fa fa-car"></i> Vehículo</label>
         <select asp-for="ID_Vehiculo" asp-items="vehiculos" class="form-select">
@@ -27,3 +27,11 @@
         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"><i class="fa fa-times"></i> Cancelar</button>
     </div>
 </form>
+
+<script>
+    if (!$.validator) {
+        $.getScript("/lib/jquery-validation/dist/jquery.validate.min.js", function() {
+            $.getScript("/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js");
+        });
+    }
+</script>
